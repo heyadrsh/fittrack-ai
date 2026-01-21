@@ -1,0 +1,10 @@
+# Ralph Progress Log
+Started: 2026-01-22
+Project: FitTrack AI - Personal Fitness Tracking Web App
+---
+
+## Initial Setup
+- Next.js project created with TypeScript, Tailwind, ESLint
+- Dependencies installed: @supabase/supabase-js, @supabase/ssr, @google/generative-ai, recharts, date-fns, lucide-react, clsx, tailwind-merge, zod
+- Configuration files created: .env.local (template), AGENTS.md, prompt.md
+---
