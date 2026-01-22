@@ -111,6 +111,24 @@ src/
 
 ## Critical Implementation Details
 
+### Gemini Model Configuration
+```typescript
+// Use gemini-3-flash-preview model with thinking support
+import { GoogleGenAI } from '@google/genai';
+
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
+
+const config = {
+  thinkingConfig: {
+    thinkingLevel: 'HIGH',  // Enable deep thinking
+  },
+};
+
+const model = 'gemini-3-flash-preview';  // Latest model with thinking support
+```
+
 ### Gemini API - Food Analysis Prompt
 ```typescript
 const FOOD_ANALYSIS_PROMPT = `You are a nutrition expert specializing in Indian cuisine.
