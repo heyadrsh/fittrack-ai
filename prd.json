@@ -68,8 +68,8 @@
         "Verify login flow works in browser"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: PIN auth with middleware protection"
     },
     {
       "id": "US-005",
