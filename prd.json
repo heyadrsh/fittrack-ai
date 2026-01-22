@@ -158,8 +158,8 @@
         "Verify page layout in browser"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Food page with AI analysis and database integration"
     },
     {
       "id": "US-010",
@@ -175,8 +175,8 @@
         "Typecheck passes (npm run build)"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Gemini food analysis endpoint"
     },
     {
       "id": "US-011",
@@ -191,8 +191,8 @@
         "Typecheck passes (npm run build)"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Food log CRUD operations"
     },
     {
       "id": "US-012",
@@ -210,8 +210,8 @@
         "Verify food logging flow works end-to-end in browser"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Food history with delete functionality"
     },
     {
       "id": "US-013",
@@ -228,8 +228,8 @@
         "Verify totals update correctly in browser"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: useFoodLog hook with totals calculation"
     },
     {
       "id": "US-014",
@@ -246,8 +246,8 @@
         "Verify preset creation and usage in browser"
       ],
       "priority": 14,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Food presets CRUD with quick-add buttons"
     },
     {
       "id": "US-015",
@@ -264,8 +264,8 @@
         "Verify chart renders correctly in browser"
       ],
       "priority": 15,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Macro breakdown pie chart"
     },
     {
       "id": "US-016",
