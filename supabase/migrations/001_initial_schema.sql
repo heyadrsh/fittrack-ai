@@ -1,15 +1,12 @@
 -- FitTrack AI - Initial Database Schema
 -- Run with: supabase db push
 
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 -- ============================================
 -- USERS TABLE
 -- Stores user profile and authentication data
 -- ============================================
 CREATE TABLE users (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   pin_hash TEXT NOT NULL,
   weight_kg DECIMAL(5,2),
   height_cm INTEGER,
@@ -26,7 +23,7 @@ COMMENT ON TABLE users IS 'User profiles with authentication and basic metrics';
 -- Stores individual food entries
 -- ============================================
 CREATE TABLE food_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   logged_at TIMESTAMPTZ DEFAULT NOW(),
   description TEXT NOT NULL,
@@ -47,7 +44,7 @@ COMMENT ON TABLE food_logs IS 'Daily food intake logs with nutrition data';
 -- Saved meal presets for quick logging
 -- ============================================
 CREATE TABLE food_presets (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   description TEXT,
@@ -65,7 +62,7 @@ COMMENT ON TABLE food_presets IS 'Saved meal presets for quick food logging';
 -- Weekly workout schedule templates
 -- ============================================
 CREATE TABLE workout_plans (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   day_of_week INTEGER NOT NULL CHECK (day_of_week BETWEEN 1 AND 7),
   name TEXT,
@@ -80,7 +77,7 @@ COMMENT ON TABLE workout_plans IS 'Weekly workout templates with exercises';
 -- Completed workout records
 -- ============================================
 CREATE TABLE workout_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   workout_plan_id UUID REFERENCES workout_plans(id) ON DELETE SET NULL,
   completed_at TIMESTAMPTZ DEFAULT NOW(),
@@ -98,7 +95,7 @@ COMMENT ON TABLE workout_logs IS 'Completed workout sessions with actual perform
 -- Exercise library/database
 -- ============================================
 CREATE TABLE exercises (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   muscle_group TEXT,
   equipment TEXT,
@@ -115,7 +112,7 @@ COMMENT ON TABLE exercises IS 'Exercise library with form videos and instruction
 -- Body measurements and composition
 -- ============================================
 CREATE TABLE body_metrics (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   logged_at TIMESTAMPTZ DEFAULT NOW(),
   weight_kg DECIMAL(5,2),
@@ -135,7 +132,7 @@ COMMENT ON TABLE body_metrics IS 'Body measurements and composition tracking';
 -- Body progress photos with AI analysis
 -- ============================================
 CREATE TABLE progress_photos (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   uploaded_at TIMESTAMPTZ DEFAULT NOW(),
   photo_url TEXT,
@@ -151,7 +148,7 @@ COMMENT ON TABLE progress_photos IS 'Progress photos with optional AI body analy
 -- Daily water intake tracking
 -- ============================================
 CREATE TABLE water_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   logged_at TIMESTAMPTZ DEFAULT NOW(),
   amount_ml INTEGER NOT NULL
@@ -165,7 +162,7 @@ COMMENT ON TABLE water_logs IS 'Water intake logs in milliliters';
 -- Supplement tracking
 -- ============================================
 CREATE TABLE supplement_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   logged_at TIMESTAMPTZ DEFAULT NOW(),
   supplement_name TEXT NOT NULL,
@@ -180,7 +177,7 @@ COMMENT ON TABLE supplement_logs IS 'Daily supplement intake tracking';
 -- Sleep tracking for recovery
 -- ============================================
 CREATE TABLE sleep_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   logged_at TIMESTAMPTZ DEFAULT NOW(),
   hours_slept DECIMAL(3,1),
@@ -195,7 +192,7 @@ COMMENT ON TABLE sleep_logs IS 'Sleep duration and quality tracking';
 -- Gamification: XP, levels, badges, streaks
 -- ============================================
 CREATE TABLE user_stats (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE UNIQUE,
   xp INTEGER DEFAULT 0,
   level INTEGER DEFAULT 1,
@@ -214,7 +211,7 @@ COMMENT ON TABLE user_stats IS 'Gamification stats: XP, levels, badges, streaks'
 -- Track PRs for each exercise
 -- ============================================
 CREATE TABLE personal_records (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   exercise_id UUID REFERENCES exercises(id) ON DELETE CASCADE,
   weight_kg DECIMAL(5,2) NOT NULL,

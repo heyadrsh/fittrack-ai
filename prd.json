@@ -48,8 +48,8 @@
         "File is valid SQL syntax"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": "User must run 'supabase db push' manually after this story"
+      "passes": true,
+      "notes": "Completed: Full schema migration created"
     },
     {
       "id": "US-004",
