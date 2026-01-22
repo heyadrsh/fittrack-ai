@@ -87,8 +87,8 @@
         "Verify navigation works on both mobile and desktop viewports"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed"
     },
     {
       "id": "US-006",
@@ -106,8 +106,8 @@
         "Verify layout in browser at different viewport sizes"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed"
     },
     {
       "id": "US-007",
@@ -123,8 +123,8 @@
         "Typecheck passes (npm run build)"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Gemini client with food and body analysis"
     },
     {
       "id": "US-008",
@@ -139,8 +139,8 @@
         "Typecheck passes (npm run build)"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Calorie, body fat, and date utilities"
     },
     {
       "id": "US-009",
