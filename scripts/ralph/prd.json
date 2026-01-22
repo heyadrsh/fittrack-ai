@@ -1,0 +1,902 @@
+{
+  "project": "FitTrack AI",
+  "branchName": "ralph/fittrack-ai-v1",
+  "description": "Personal fitness tracking web app with AI-powered nutrition analysis, workout tracking, and body metrics",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Initialize project structure and design system",
+      "description": "As a developer, I need the base project structure and design system components.",
+      "acceptanceCriteria": [
+        "Create src/lib/constants.ts with USER_PROFILE object containing: PIN='0007', WEIGHT_KG=67.7, HEIGHT_CM=168, AGE=23, GOAL='body_recomposition', DIET='vegetarian_eggs', WORKOUT_DAYS=[1,2,3,4,5], WATER_GOAL_ML=3000, CALORIE_TARGET=2200, PROTEIN_TARGET_G=135",
+        "Create src/components/ui/button.tsx with brutalist style (2px black border, black fill with white text variant, white fill with black text variant)",
+        "Create src/components/ui/card.tsx with brutalist style (2px black border, white background, p-4 to p-6)",
+        "Create src/components/ui/input.tsx with brutalist style (2px black border, p-3)",
+        "Create src/components/ui/badge.tsx for status indicators",
+        "Create src/lib/utils.ts with cn() function using clsx and tailwind-merge",
+        "Update src/app/globals.css with black/white/grey color variables",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Completed: Design system with brutalist UI components"
+    },
+    {
+      "id": "US-002",
+      "title": "Set up Supabase client configuration",
+      "description": "As a developer, I need Supabase clients for server and browser use.",
+      "acceptanceCriteria": [
+        "Create src/lib/supabase/client.ts with createBrowserClient for client-side operations",
+        "Create src/lib/supabase/server.ts with createServerClient for server-side operations",
+        "Create src/lib/supabase/types.ts with Database type definition (placeholder for now)",
+        "Environment variables are properly accessed from .env.local",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Completed: Supabase clients configured"
+    },
+    {
+      "id": "US-003",
+      "title": "Create initial database migration",
+      "description": "As a developer, I need the database schema created in Supabase.",
+      "acceptanceCriteria": [
+        "Create supabase/migrations/001_initial_schema.sql with all 13 tables",
+        "Tables: users, food_logs, food_presets, workout_plans, workout_logs, exercises, body_metrics, progress_photos, water_logs, supplement_logs, sleep_logs, user_stats, personal_records",
+        "Include proper foreign keys, defaults, and constraints",
+        "Add comments documenting the purpose of each table",
+        "File is valid SQL syntax"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Completed: Full schema migration created"
+    },
+    {
+      "id": "US-004",
+      "title": "Implement PIN authentication",
+      "description": "As a user, I want to login with a 4-digit PIN code.",
+      "acceptanceCriteria": [
+        "Create src/app/(auth)/login/page.tsx with PIN input (4 digits only)",
+        "PIN displays as dots for privacy using password input type",
+        "Create numpad component with digits 0-9, backspace, and enter",
+        "Successful PIN (0007) stores auth in cookie and redirects to /",
+        "Invalid PIN shows red error message 'Invalid PIN' that fades after 3 seconds",
+        "Create src/lib/auth.ts with functions: verifyPin(), setAuthCookie(), getAuthCookie(), clearAuthCookie()",
+        "Create src/middleware.ts to protect all routes except /login",
+        "Unauthorized access redirects to /login",
+        "Typecheck passes (npm run build)",
+        "Verify login flow works in browser"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Completed: PIN auth with middleware protection"
+    },
+    {
+      "id": "US-005",
+      "title": "Create main layout with navigation",
+      "description": "As a user, I need a navigation to access all sections of the app.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/layout.tsx with navigation structure",
+        "Navigation items: Dashboard (/), Food (/food), Workout (/workout), Body (/body), Water (/water), Progress (/progress), Settings (/settings)",
+        "Desktop: Sidebar navigation on the left (w-64)",
+        "Mobile: Bottom navigation bar (fixed, h-16)",
+        "Active route is highlighted with black fill",
+        "Use lucide-react icons: Home, Utensils, Dumbbell, User, Droplets, TrendingUp, Settings",
+        "Brutalist design with 2px black borders",
+        "Typecheck passes (npm run build)",
+        "Verify navigation works on both mobile and desktop viewports"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "Completed"
+    },
+    {
+      "id": "US-006",
+      "title": "Build dashboard home page skeleton",
+      "description": "As a user, I want to see a summary of today's activities on the dashboard.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/page.tsx as the main dashboard",
+        "Display today's date at top using date-fns format",
+        "Create 4 summary cards: Calories (target 2200), Protein (target 135g), Water (target 3000ml), Workout Status",
+        "Each card shows current value / target with progress bar",
+        "Add streak counter placeholder (shows 0 days)",
+        "Add quick action buttons: Log Food, Log Water, Start Workout, Log Weight",
+        "Responsive grid: 2 columns on mobile, 4 on desktop",
+        "Typecheck passes (npm run build)",
+        "Verify layout in browser at different viewport sizes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "Completed"
+    },
+    {
+      "id": "US-007",
+      "title": "Set up Gemini AI client",
+      "description": "As a developer, I need a Gemini API client for food and body analysis.",
+      "acceptanceCriteria": [
+        "Create src/lib/gemini/client.ts with Gemini API configuration",
+        "Use model: gemini-2.0-flash-thinking-exp-01-21 (or gemini-1.5-flash as fallback)",
+        "Create analyzeFood(description: string) function that returns nutrition JSON",
+        "Create analyzeBodyPhoto(imageBase64: string) function for body analysis",
+        "Include the food analysis prompt from AGENTS.md",
+        "Handle API errors gracefully with try-catch and meaningful error messages",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "Completed: Gemini client with food and body analysis"
+    },
+    {
+      "id": "US-008",
+      "title": "Create utility functions",
+      "description": "As a developer, I need utility functions for calculations.",
+      "acceptanceCriteria": [
+        "Create src/lib/utils/calories.ts with: calculateBMR(weight, height, age), calculateTDEE(bmr, activityLevel), calculateDeficit(tdee, targetCalories)",
+        "Create src/lib/utils/bodyFat.ts with: calculateBodyFatNavy(waist, neck, height) using Navy Method formula",
+        "Create src/lib/utils/dates.ts with: formatDate(date), formatTime(date), getStartOfDay(date), isToday(date), getDayOfWeek(date)",
+        "All functions have proper TypeScript types",
+        "Add JSDoc comments explaining each function",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Completed: Calorie, body fat, and date utilities"
+    },
+    {
+      "id": "US-009",
+      "title": "Build food logging page UI",
+      "description": "As a user, I want a page to log my food with natural language.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/food/page.tsx with natural language input",
+        "Large textarea (min-h-32) for food description",
+        "Submit button 'Analyze with AI' with loading state",
+        "Today's food log list below input (empty state for now)",
+        "Running total section showing calories and protein vs targets",
+        "Progress bars for calories and protein",
+        "Brutalist card design for each section",
+        "Typecheck passes (npm run build)",
+        "Verify page layout in browser"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Completed: Food page with AI analysis and database integration"
+    },
+    {
+      "id": "US-010",
+      "title": "Implement Gemini food analysis API",
+      "description": "As a user, I want AI to analyze my food and calculate nutrition.",
+      "acceptanceCriteria": [
+        "Create src/app/api/ai/analyze-food/route.ts POST endpoint",
+        "Accept JSON body: { description: string }",
+        "Call Gemini API with the food analysis prompt from AGENTS.md",
+        "Parse Gemini response to extract: food_name, portion_description, calories, protein_g, carbs_g, fat_g, fiber_g, confidence",
+        "Handle Indian food names correctly (use reference nutrition data from AGENTS.md)",
+        "Return JSON response: { success: true, data: {...} } or { success: false, error: string }",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Completed: Gemini food analysis endpoint"
+    },
+    {
+      "id": "US-011",
+      "title": "Connect food logging to database",
+      "description": "As a user, I want my food logs saved to the database.",
+      "acceptanceCriteria": [
+        "Create src/app/api/food/log/route.ts POST endpoint",
+        "Accept JSON body with nutrition data from Gemini analysis",
+        "Save to food_logs table with user_id, logged_at, description, calories, protein_g, carbs_g, fat_g, meal_type",
+        "Return the saved record with id",
+        "Handle database errors gracefully",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "Completed: Food log CRUD operations"
+    },
+    {
+      "id": "US-012",
+      "title": "Display food log history",
+      "description": "As a user, I want to see my food history for today.",
+      "acceptanceCriteria": [
+        "Create src/app/api/food/history/route.ts GET endpoint",
+        "Accept query param: date (defaults to today)",
+        "Fetch food_logs for the specified date",
+        "Update food page to fetch and display history",
+        "Each food item shows: time, description, calories, protein",
+        "Add delete button on each item (calls DELETE /api/food/log/[id])",
+        "Create src/app/api/food/log/[id]/route.ts for DELETE",
+        "Typecheck passes (npm run build)",
+        "Verify food logging flow works end-to-end in browser"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": "Completed: Food history with delete functionality"
+    },
+    {
+      "id": "US-013",
+      "title": "Add daily nutrition totals",
+      "description": "As a user, I want to see my daily totals vs targets.",
+      "acceptanceCriteria": [
+        "Create src/hooks/useDailyNutrition.ts hook",
+        "Hook calculates sum of today's calories, protein, carbs, fat",
+        "Display progress bars on food page showing current vs target",
+        "Progress bars use color coding: green (<80%), yellow (80-100%), red (>100%)",
+        "Show percentage complete for each macro",
+        "Auto-refresh totals when new food is logged",
+        "Typecheck passes (npm run build)",
+        "Verify totals update correctly in browser"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "Completed: useFoodLog hook with totals calculation"
+    },
+    {
+      "id": "US-014",
+      "title": "Implement food presets",
+      "description": "As a user, I want to save frequent meals as presets.",
+      "acceptanceCriteria": [
+        "Create src/app/api/food/presets/route.ts GET/POST endpoints",
+        "GET returns user's presets from food_presets table",
+        "POST creates new preset with name, description, nutrition values",
+        "Add 'Save as preset' button in food analysis result card",
+        "Display presets as horizontal scrollable quick-add buttons",
+        "Clicking preset auto-fills input and shows nutrition preview",
+        "Typecheck passes (npm run build)",
+        "Verify preset creation and usage in browser"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": "Completed: Food presets CRUD with quick-add buttons"
+    },
+    {
+      "id": "US-015",
+      "title": "Add macro breakdown display",
+      "description": "As a user, I want to see my macronutrient breakdown.",
+      "acceptanceCriteria": [
+        "Create src/components/charts/MacroChart.tsx using recharts PieChart",
+        "Show protein, carbs, fat as segments with different colors",
+        "Display grams and percentages in legend",
+        "Add to food page below running totals",
+        "Chart updates as food is logged",
+        "Responsive sizing for mobile",
+        "Typecheck passes (npm run build)",
+        "Verify chart renders correctly in browser"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": "Completed: Macro breakdown pie chart"
+    },
+    {
+      "id": "US-016",
+      "title": "Seed exercise library",
+      "description": "As a developer, I need a database of common gym exercises.",
+      "acceptanceCriteria": [
+        "Create supabase/migrations/002_seed_exercises.sql with 50+ exercises",
+        "Include exercises from AGENTS.md WORKOUT_PLAN",
+        "Each exercise has: name, muscle_group, equipment, youtube_video_id, instructions, difficulty",
+        "Cover all major muscle groups: chest, back, shoulders, arms (biceps, triceps), legs (quads, hamstrings, glutes, calves), core",
+        "Include compound and isolation movements",
+        "Valid SQL syntax"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": "User must run migration manually"
+    },
+    {
+      "id": "US-017",
+      "title": "Create workout plan structure",
+      "description": "As a user, I want AI-generated workout plans for Mon-Fri.",
+      "acceptanceCriteria": [
+        "Create src/app/api/workout/plan/route.ts GET/POST endpoints",
+        "GET returns workout plan for specified day_of_week",
+        "POST generates new 5-day split plan using WORKOUT_PLAN from AGENTS.md",
+        "Store plan in workout_plans table",
+        "Create src/lib/workout/defaultPlan.ts with hardcoded 5-day split",
+        "Plan includes exercise references to exercises table",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Build workout page UI",
+      "description": "As a user, I want to see today's workout with exercises.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/workout/page.tsx",
+        "Show today's workout name based on day of week",
+        "List all exercises with target sets x reps",
+        "Each exercise card shows: name, target sets/reps, YouTube thumbnail link",
+        "YouTube links open in new tab: https://youtube.com/watch?v={video_id}",
+        "Show 'Rest Day' message on Saturday/Sunday",
+        "Brutalist card design with 2px black borders",
+        "Typecheck passes (npm run build)",
+        "Verify workout displays correctly for current day"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-019",
+      "title": "Implement exercise logging",
+      "description": "As a user, I want to log my actual sets/reps/weight.",
+      "acceptanceCriteria": [
+        "Add input fields for each set in exercise card: weight (kg), reps",
+        "Create 'Add Set' button to add additional sets",
+        "Add checkmark button to mark set as complete",
+        "Calculate and display total volume (weight x reps x sets)",
+        "Create src/components/workout/ExerciseCard.tsx component",
+        "State management for logged sets",
+        "Typecheck passes (npm run build)",
+        "Verify set logging works in browser"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-020",
+      "title": "Add rest timer component",
+      "description": "As a user, I want a rest timer between sets.",
+      "acceptanceCriteria": [
+        "Create src/components/workout/RestTimer.tsx",
+        "Timer with preset buttons: 60s, 90s, 120s",
+        "Visual countdown display with large numbers",
+        "Progress bar showing time remaining",
+        "Audio beep when timer completes (use Web Audio API)",
+        "Auto-start option after marking set complete",
+        "Skip button to dismiss timer early",
+        "Typecheck passes (npm run build)",
+        "Verify timer works correctly in browser"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-021",
+      "title": "Track personal records",
+      "description": "As a user, I want to see when I hit a new PR.",
+      "acceptanceCriteria": [
+        "Create src/app/api/workout/pr/route.ts GET/POST endpoints",
+        "POST checks if logged weight exceeds previous max for exercise",
+        "Save new PR to personal_records table",
+        "Create src/components/workout/PRBadge.tsx to display on exercise",
+        "Show PR notification when achieved",
+        "Display PR history on exercise: 'Your best: 50kg on Jan 15'",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-022",
+      "title": "Implement progressive overload suggestions",
+      "description": "As a user, I want AI to suggest when to increase weights.",
+      "acceptanceCriteria": [
+        "Create src/lib/workout/progressiveOverload.ts with shouldIncreaseWeight() function",
+        "Analyze last 3 workouts for each exercise",
+        "If user hit target reps consistently, suggest +2.5kg increase",
+        "Display suggestion as yellow banner on exercise card",
+        "Suggestion shows: 'Try 42.5kg next time! You hit 10 reps 3 sessions in a row.'",
+        "Add dismiss button to hide suggestion",
+        "Typecheck passes (npm run build)",
+        "Verify suggestions appear correctly"
+      ],
+      "priority": 22,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-023",
+      "title": "Save completed workout",
+      "description": "As a user, I want my workout saved when complete.",
+      "acceptanceCriteria": [
+        "Create src/app/api/workout/log/route.ts POST endpoint",
+        "Save all exercises with actual sets/reps/weight to workout_logs table",
+        "Calculate total workout duration from start to save",
+        "Add 'Complete Workout' button at bottom of workout page",
+        "Show success message with summary: exercises completed, total volume, duration",
+        "Redirect to dashboard after completion",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-024",
+      "title": "Build workout history page",
+      "description": "As a user, I want to see my past workouts.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/workout/history/page.tsx",
+        "Create src/app/api/workout/history/route.ts GET endpoint",
+        "List past workouts with: date, name, duration, total volume",
+        "Click to expand and view exercise details",
+        "Show PR badges on exercises where PR was set",
+        "Pagination or infinite scroll for older workouts",
+        "Typecheck passes (npm run build)",
+        "Verify history displays correctly in browser"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-025",
+      "title": "Add exercise substitution",
+      "description": "As a user, I want alternatives if equipment is busy.",
+      "acceptanceCriteria": [
+        "Add 'Swap' button on each exercise card",
+        "Create src/app/api/workout/exercises/alternatives/route.ts",
+        "Return exercises with same muscle_group from exercises table",
+        "Show modal with alternative exercises",
+        "Selecting alternative replaces exercise in today's workout",
+        "Store substitution in workout session state",
+        "Typecheck passes (npm run build)",
+        "Verify swap functionality in browser"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-026",
+      "title": "Build body metrics page",
+      "description": "As a user, I want to log my body measurements.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/body/page.tsx",
+        "Form inputs for: weight (kg), waist (cm), chest (cm), arm (cm), thigh (cm), neck (cm)",
+        "Create src/app/api/body/metrics/route.ts GET/POST endpoints",
+        "Calculate body fat % using Navy method when waist and neck are provided",
+        "Display calculated body fat with category (Athletic/Fit/Average/High)",
+        "Save button stores to body_metrics table",
+        "Show today's entry if exists",
+        "Typecheck passes (npm run build)",
+        "Verify form works correctly in browser"
+      ],
+      "priority": 26,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-027",
+      "title": "Create weight tracking chart",
+      "description": "As a user, I want to see my weight over time.",
+      "acceptanceCriteria": [
+        "Create src/components/charts/WeightChart.tsx using recharts LineChart",
+        "Plot weight over last 30 days",
+        "Show data points as dots",
+        "Display trend line",
+        "Show average weekly change in legend",
+        "Toggle between 30/90/All time views",
+        "Add to body metrics page",
+        "Typecheck passes (npm run build)",
+        "Verify chart renders correctly in browser"
+      ],
+      "priority": 27,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-028",
+      "title": "Implement progress photo upload",
+      "description": "As a user, I want to upload body progress photos.",
+      "acceptanceCriteria": [
+        "Create src/components/body/PhotoUpload.tsx component",
+        "Support 3 pose types: front, side, back",
+        "File input accepts images (jpg, png) up to 10MB",
+        "Create src/app/api/body/photos/route.ts POST endpoint",
+        "Upload to Supabase Storage (bucket: progress-photos)",
+        "Save URL to progress_photos table with pose_type",
+        "Display uploaded photos as thumbnails",
+        "Typecheck passes (npm run build)",
+        "Verify photo upload works in browser"
+      ],
+      "priority": 28,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-029",
+      "title": "Add AI body analysis",
+      "description": "As a user, I want AI to analyze my progress photos.",
+      "acceptanceCriteria": [
+        "Create src/app/api/ai/analyze-body/route.ts POST endpoint",
+        "Send photo to Gemini Vision API",
+        "Use body analysis prompt from AGENTS.md",
+        "Get analysis: estimated body fat, strong areas, improvement areas, recommendations",
+        "Save analysis to progress_photos ai_analysis field",
+        "Display analysis below photo thumbnail",
+        "Handle API errors gracefully",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 29,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-030",
+      "title": "Create before/after comparison",
+      "description": "As a user, I want to compare my progress photos.",
+      "acceptanceCriteria": [
+        "Create src/components/body/PhotoComparison.tsx component",
+        "Side-by-side photo display",
+        "Date selectors to choose before/after photos",
+        "Slider to reveal before/after (overlapping images)",
+        "Show metrics change between dates (weight, body fat)",
+        "Add to body page",
+        "Typecheck passes (npm run build)",
+        "Verify comparison works in browser"
+      ],
+      "priority": 30,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-031",
+      "title": "Build water tracking page",
+      "description": "As a user, I want to track my daily water intake.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/water/page.tsx",
+        "Create src/app/api/water/log/route.ts POST endpoint",
+        "Create src/app/api/water/today/route.ts GET endpoint",
+        "Large circular progress display showing current/goal (3000ml)",
+        "Quick add buttons: +250ml, +500ml, +1L",
+        "Today's log list with timestamps",
+        "Progress bar with percentage",
+        "Remaining amount display",
+        "Typecheck passes (npm run build)",
+        "Verify water tracking in browser"
+      ],
+      "priority": 31,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-032",
+      "title": "Create Telegram bot edge function",
+      "description": "As a user, I want Telegram notifications for water reminders.",
+      "acceptanceCriteria": [
+        "Create supabase/functions/telegram-bot/index.ts",
+        "Implement /water command to log 250ml",
+        "Implement /water500 command to log 500ml",
+        "Implement /status command for daily summary",
+        "Use Deno imports for Supabase",
+        "Send formatted Telegram messages with emojis",
+        "Add info card on water page with bot username",
+        "File has valid Deno syntax"
+      ],
+      "priority": 32,
+      "passes": false,
+      "notes": "User must deploy function manually with 'supabase functions deploy telegram-bot'"
+    },
+    {
+      "id": "US-033",
+      "title": "Set up water reminder cron",
+      "description": "As a user, I want automatic water reminders every 2 hours.",
+      "acceptanceCriteria": [
+        "Create supabase/functions/water-reminder/index.ts",
+        "Send reminder between 9am-9pm only",
+        "Include random encouraging messages",
+        "Show current water intake vs goal",
+        "Document cron schedule: '0 9,11,13,15,17,19,21 * * *'",
+        "Add setup instructions to AGENTS.md",
+        "File has valid Deno syntax"
+      ],
+      "priority": 33,
+      "passes": false,
+      "notes": "User must set up cron trigger in Supabase dashboard"
+    },
+    {
+      "id": "US-034",
+      "title": "Build supplement tracking",
+      "description": "As a user, I want to track my supplements.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/supplements/page.tsx",
+        "Create src/app/api/supplements/log/route.ts POST endpoint",
+        "Create src/app/api/supplements/today/route.ts GET endpoint",
+        "Checklist style UI with common supplements: Protein powder, Creatine, Multivitamin, Fish oil, Vitamin D",
+        "Check/uncheck to mark as taken/not taken",
+        "Save to supplement_logs table",
+        "Show streak of consistent supplement use",
+        "Typecheck passes (npm run build)",
+        "Verify supplement tracking in browser"
+      ],
+      "priority": 34,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-035",
+      "title": "Build sleep logging",
+      "description": "As a user, I want to log my sleep for recovery tracking.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/sleep/page.tsx",
+        "Create src/app/api/sleep/log/route.ts POST endpoint",
+        "Create src/app/api/sleep/history/route.ts GET endpoint",
+        "Input for hours slept (decimal, 0.5 increments)",
+        "Sleep quality rating with 5 stars",
+        "Save to sleep_logs table",
+        "Show sleep history as list/chart for last 7 days",
+        "Typecheck passes (npm run build)",
+        "Verify sleep logging in browser"
+      ],
+      "priority": 35,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-036",
+      "title": "Implement calorie deficit calculator",
+      "description": "As a user, I want to see my calorie deficit status.",
+      "acceptanceCriteria": [
+        "Create src/components/dashboard/DeficitCalculator.tsx",
+        "Display BMR (calculated from user profile)",
+        "Display TDEE (BMR x 1.55 for moderate activity)",
+        "Show current intake from today's food logs",
+        "Calculate current deficit: TDEE - intake",
+        "Show projected weight change: deficit x 7 / 7700 kg/week",
+        "Add to dashboard page",
+        "Typecheck passes (npm run build)",
+        "Verify calculations are correct"
+      ],
+      "priority": 36,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-037",
+      "title": "Build settings page",
+      "description": "As a user, I want to update my profile settings.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/settings/page.tsx",
+        "Create src/app/api/user/profile/route.ts GET/PUT endpoints",
+        "Form to edit: weight, height, age, activity level",
+        "Recalculate BMR/TDEE on save",
+        "Option to change PIN (requires current PIN)",
+        "Logout button that clears auth cookie",
+        "Typecheck passes (npm run build)",
+        "Verify settings save and reload correctly"
+      ],
+      "priority": 37,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-038",
+      "title": "Build weekly report generation",
+      "description": "As a user, I want AI weekly progress reports.",
+      "acceptanceCriteria": [
+        "Create src/app/api/reports/weekly/route.ts GET endpoint",
+        "Aggregate data: workouts completed, avg calories, avg protein, weight change",
+        "Create prompt for Gemini to analyze and provide suggestions",
+        "Return formatted report with sections: Summary, Achievements, Suggestions",
+        "Cache report for the week to avoid regeneration",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 38,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-039",
+      "title": "Build monthly report generation",
+      "description": "As a user, I want detailed monthly progress analysis.",
+      "acceptanceCriteria": [
+        "Create src/app/api/reports/monthly/route.ts GET endpoint",
+        "Include: body composition changes, strength PRs, consistency stats",
+        "Compare to previous month if available",
+        "Gemini provides detailed analysis and adjusted recommendations",
+        "Return comprehensive report",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 39,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-040",
+      "title": "Build reports view page",
+      "description": "As a user, I want to view my weekly and monthly reports.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/reports/page.tsx",
+        "Tabs for Weekly and Monthly reports",
+        "Display report content with formatted markdown",
+        "Include charts for key metrics",
+        "Historical reports list with date selector",
+        "Loading state while generating report",
+        "Typecheck passes (npm run build)",
+        "Verify reports display correctly in browser"
+      ],
+      "priority": 40,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-041",
+      "title": "Implement XP system",
+      "description": "As a user, I want to earn XP for my activities.",
+      "acceptanceCriteria": [
+        "Create src/lib/gamification/xp.ts with XP_VALUES constant from AGENTS.md",
+        "Create src/app/api/stats/xp/route.ts POST endpoint to add XP",
+        "Function awardXP(action: string) adds XP to user_stats",
+        "Calculate level from XP using LEVELS constant",
+        "Call awardXP after: logging food (+5), completing workout (+20), logging water (+2), hitting protein goal (+15)",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 41,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-042",
+      "title": "Create badge definitions",
+      "description": "As a user, I want to earn badges for achievements.",
+      "acceptanceCriteria": [
+        "Create src/lib/gamification/badges.ts with BADGES array from AGENTS.md",
+        "15 badges: First Steps, Nutrition Novice, Week Warrior, Monthly Master, Personal Best, Protein King, Hydration Hero, Level 5, Level 10, Century Club, Rep Master, Recovery Pro, Data Driven, Transformation, Early Bird",
+        "Create checkBadgeCondition(badge, userData) function",
+        "Create src/app/api/stats/badges/route.ts GET/POST endpoints",
+        "Award badge when conditions met, save to user_stats badges array",
+        "Typecheck passes (npm run build)"
+      ],
+      "priority": 42,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-043",
+      "title": "Build achievements page",
+      "description": "As a user, I want to see my badges and XP.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/achievements/page.tsx",
+        "Display current level and XP progress bar to next level",
+        "Show earned badges with emoji, name, and earned date",
+        "Show locked badges (greyed out) with unlock conditions",
+        "XP breakdown showing how points were earned this week",
+        "Grid layout for badges (4 per row on mobile)",
+        "Typecheck passes (npm run build)",
+        "Verify achievements display correctly in browser"
+      ],
+      "priority": 43,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-044",
+      "title": "Add streak tracking",
+      "description": "As a user, I want to see my workout and logging streaks.",
+      "acceptanceCriteria": [
+        "Create src/lib/gamification/streaks.ts with calculateStreak() function",
+        "Calculate workout streak (consecutive gym days Mon-Fri)",
+        "Calculate logging streak (days with food logged)",
+        "Update user_stats streaks after each action",
+        "Reset streak if day missed",
+        "Display streaks on dashboard with fire emoji",
+        "Typecheck passes (npm run build)",
+        "Verify streak calculations are correct"
+      ],
+      "priority": 44,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-045",
+      "title": "Add achievement notifications",
+      "description": "As a user, I want to be notified when I earn badges.",
+      "acceptanceCriteria": [
+        "Create src/components/shared/Toast.tsx notification component",
+        "Create src/components/shared/AchievementPopup.tsx for badge celebrations",
+        "Show toast when XP is earned: '+5 XP'",
+        "Show popup when badge earned with confetti animation (CSS)",
+        "Show popup when level up",
+        "Add notification context/provider",
+        "Typecheck passes (npm run build)",
+        "Verify notifications appear correctly in browser"
+      ],
+      "priority": 45,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-046",
+      "title": "Update dashboard with real data",
+      "description": "As a user, I want the dashboard to show real data.",
+      "acceptanceCriteria": [
+        "Create src/app/api/dashboard/route.ts GET endpoint",
+        "Fetch today's actual: calories, protein, water intake",
+        "Fetch actual streak counts from user_stats",
+        "Fetch today's workout completion status",
+        "Connect all dashboard cards to real data",
+        "Quick action buttons navigate to correct pages",
+        "Loading skeletons while data fetches",
+        "Typecheck passes (npm run build)",
+        "Verify dashboard shows correct real data"
+      ],
+      "priority": 46,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-047",
+      "title": "Add progress charts page",
+      "description": "As a user, I want comprehensive progress charts.",
+      "acceptanceCriteria": [
+        "Create src/app/(dashboard)/progress/page.tsx",
+        "Weight trend chart (LineChart)",
+        "Calorie intake chart (BarChart daily average)",
+        "Protein trend chart (LineChart daily average)",
+        "Workout frequency chart (BarChart per week)",
+        "Time range selectors: 7d, 30d, 90d",
+        "Responsive layout (stack on mobile, grid on desktop)",
+        "Typecheck passes (npm run build)",
+        "Verify charts render with data in browser"
+      ],
+      "priority": 47,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-048",
+      "title": "Mobile responsive polish",
+      "description": "As a user, I want the app to work well on mobile.",
+      "acceptanceCriteria": [
+        "Audit all pages at 375px viewport width",
+        "Bottom navigation sticky and 16px safe area padding",
+        "Touch targets minimum 44px",
+        "Forms have proper mobile keyboard types (numeric for numbers)",
+        "No horizontal scroll anywhere",
+        "Text readable without zooming",
+        "Workout page scrollable with sticky header",
+        "Typecheck passes (npm run build)",
+        "Verify all pages work on mobile viewport in browser"
+      ],
+      "priority": 48,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-049",
+      "title": "Add loading states and error handling",
+      "description": "As a user, I want feedback when actions are processing.",
+      "acceptanceCriteria": [
+        "Create src/components/shared/Spinner.tsx loading indicator",
+        "Create src/components/shared/Skeleton.tsx for content loading",
+        "All buttons show spinner when processing (disabled state)",
+        "Skeleton loaders for data fetching on all pages",
+        "Error messages displayed in Toast component",
+        "Retry button on failed requests",
+        "Global error boundary",
+        "Typecheck passes (npm run build)",
+        "Verify loading states appear correctly"
+      ],
+      "priority": 49,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-050",
+      "title": "Final UI polish and animations",
+      "description": "As a user, I want the app to feel polished and smooth.",
+      "acceptanceCriteria": [
+        "Add hover states on all interactive elements",
+        "Add focus-visible styles for accessibility",
+        "Page transitions using CSS transitions",
+        "Cards have subtle box-shadow on hover",
+        "Consistent spacing and typography throughout",
+        "No console errors or warnings",
+        "Typecheck passes (npm run build)",
+        "Lint passes (npm run lint)",
+        "Full app flow test: login -> log food -> workout -> log water -> check progress"
+      ],
+      "priority": 50,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
